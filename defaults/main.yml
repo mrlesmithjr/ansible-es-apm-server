@@ -1,2 +1,75 @@
 ---
 # defaults file for ansible-es-apm-server
+
+# Defines whether or not filebeat is configured
+es_apm_server_config: false
+
+# Define APM-Server config per
+# https://www.elastic.co/guide/en/apm/server/current/configuring-howto-apm-server.html
+# The config here will be automatically converted to proper YAML for APM Server
+# /etc/apm-server/apm-server.yml using the Jinja2 template.
+es_apm_server_configuration:
+  apm-server:
+    # Defines the host and port the server is listening on
+    host: localhost:8200
+
+  output:
+    elasticsearch:
+      enabled: true
+      # The list of Elasticsearch nodes to connect to. The events are
+      # distributed to these nodes in round robin order. If one node becomes
+      # unreachable, the event is automatically sent to another node.
+      hosts:
+        - localhost:9200
+      # The name of the protocol Elasticsearch is reachable on.
+      # The options are: http or https.
+      protocol: http
+
+    kafka:
+      enabled: false
+      # The list of Kafka broker addresses from where to fetch the cluster metadata. The cluster metadata contain the
+      # actual Kafka brokers events are published to.
+      hosts:
+        []
+        # - kafka-01:9092
+        # - kafka-02:9092
+        # - kafka-03:9092
+
+    logstash:
+      enabled: false
+      # The list of known Logstash servers to connect to. If load balancing is
+      # disabled, but multiple hosts are configured, one host is selected
+      # randomly (there is no precedence). If one host becomes unreachable,
+      # another one is selected randomly.
+      hosts:
+        []
+        # - localhost:5044
+      # If set to true and multiple Logstash hosts are configured, the output
+      # plugin load balances published events onto all Logstash hosts.
+      loadbalance: false
+
+    redis:
+      enabled: false
+      # The list of Redis servers to connect to. If load balancing is enabled,
+      # the events are distributed to the servers in the list. If one server
+      # becomes unreachable, the events are distributed to the reachable
+      # servers only.
+      hosts:
+        []
+        # - localhost
+      # If set to true and multiple hosts or workers are configured, the output
+      # plugin load balances published events onto all Redis hosts.
+      loadbalance: true
+
+  setup:
+    template:
+      # Set to false to disable template loading. If set this to false,
+      # you must load the template manually.
+      enabled: true
+
+es_apm_server_repo_key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+es_apm_server_repo_url: https://artifacts.elastic.co/packages
+
+# Define major version to install
+es_apm_server_major_ver: oss-7.x
+es_apm_server_minor_version: 7.8.0
