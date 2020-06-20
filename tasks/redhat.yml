@@ -1,0 +1,30 @@
+---
+- name: redhat | Copying Elasticsearch GPG Key
+  copy:
+    src: GPG-KEY-elasticsearch
+    dest: /tmp/GPG-KEY-elasticsearch
+
+- name: redhat | Adding Elasticsearch GPG Key
+  rpm_key:
+    key: /tmp/GPG-KEY-elasticsearch
+    state: present
+  become: true
+
+- name: redhat | Adding apm-server Repo
+  yum_repository:
+    baseurl: "{{ es_apm_server_repo_url+'/'+es_apm_server_major_ver+'/yum' }}"
+    description: "apm-server repository for {{ es_apm_server_major_ver }} packages"
+    enabled: true
+    gpgcheck: true
+    gpgkey: "{{ es_apm_server_repo_key }}"
+    name: "{{ 'apm-server-'+es_apm_server_major_ver }}"
+    state: present
+  become: true
+
+- name: redhat | Installing apm-server
+  package:
+    name: "{{ 'apm-server-'+es_apm_server_minor_version|string }}"
+    state: present
+  become: true
+  register: result
+  until: result is successful
