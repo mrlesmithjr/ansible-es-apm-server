@@ -1,7 +1,9 @@
 > [!CAUTION]
 > **This project is archived and no longer maintained.**
 > Archived: 2026-03-26
-> Reason: Elastic ecosystem has evolved beyond this role; use official Elastic tooling# ansible-es-apm-server
+> Reason: Elastic ecosystem has evolved beyond this role; use official Elastic tooling
+
+# ansible-es-apm-server
 
 Ansible role to install/configure Elastic APM server
 
